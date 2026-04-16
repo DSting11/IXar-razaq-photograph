@@ -67,7 +67,7 @@ function updateCountdown() {
 updateCountdown();
 setInterval(updateCountdown, 1000);
 
-/* ── Build Student Cards with lazy image loading ──────────────── */
+/* ── Build Student Cards (dengan mekanisme load/unload) ──────────────── */
 function buildStudentCard(s) {
   const card = document.createElement('article');
   card.className = 'student-card';
@@ -104,26 +104,43 @@ function buildStudentCard(s) {
 }
 
 const grid = document.getElementById('studentsGrid');
-const imageObserver = new IntersectionObserver((entries, observer) => {
+
+// Observer untuk load/unload gambar berdasarkan visibilitas
+const imageLoadUnloadObserver = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
+    const img = entry.target;
+    const realSrc = img.getAttribute('data-src');
+
     if (entry.isIntersecting) {
-      const img = entry.target;
-      const src = img.getAttribute('data-src');
-      if (src) {
-        img.src = src;
-        img.removeAttribute('data-src');
-        img.classList.add('loaded');
+      // Masuk viewport → mulai unduh jika belum ada src yang sesuai
+      if (!img.src || img.src.includes('data:image') || img.src !== realSrc) {
+        // Hanya set src jika belum memuat gambar yang benar
+        img.src = realSrc;
+        img.classList.add('loading'); // opsional untuk indikator loading
       }
-      observer.unobserve(img);
+    } else {
+      // Keluar viewport → batalkan unduh & kosongkan src
+      if (img.src && !img.src.includes('data:image')) {
+        // Batalkan request jika memungkinkan (browser-dependent)
+        if ('src' in img) {
+          img.src = ''; // atau set ke placeholder kosong
+          // Jangan lupa kembalikan placeholder SVG agar tidak blank
+          img.src = 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 400 400\'%3E%3Crect width=\'400\' height=\'400\' fill=\'%231b4a2e\'/%3E%3C/svg%3E';
+        }
+        img.classList.remove('loading');
+      }
     }
   });
-}, { rootMargin: '200px 0px', threshold: 0.01 });
+}, {
+  rootMargin: '50px 0px', // sedikit margin agar mulai unduh sebelum benar-benar masuk
+  threshold: 0.01
+});
 
 students.forEach(s => {
   const card = buildStudentCard(s);
   grid.appendChild(card);
   const img = card.querySelector('.student-photo');
-  if (img) imageObserver.observe(img);
+  if (img) imageLoadUnloadObserver.observe(img);
 });
 
 /* ── Intersection Observer for fade-up animation ───────────────── */
