@@ -558,7 +558,14 @@ a   { text-decoration: none; color: inherit; }
   width: 100%;
   height: auto;
   object-position: top center;
-  transition: transform 0.55s ease;
+  transition: transform 0.55s ease, filter 0.3s ease;
+}
+.student-photo.lazy-img:not(.loaded) {
+  filter: blur(8px);
+  background: #1b4a2e;
+}
+.student-photo.loaded {
+  filter: blur(0);
 }
 .student-card:hover .student-photo { transform: scale(1.05); }
 
