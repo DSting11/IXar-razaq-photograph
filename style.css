@@ -549,10 +549,24 @@ a   { text-decoration: none; color: inherit; }
 }
 .student-card:hover .student-number { transform: scale(1.05); background: #2ecc71; }
 
+/* Default state (tersembunyi) */
 .student-photo-wrap {
-  position: relative;
+  max-height: 0;
+  opacity: 0;
   overflow: hidden;
-  background: #1b4a2e;
+  transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.45s ease;
+}
+
+/* Terbuka */
+.student-photo-wrap.photo-is-open {
+  max-height: 600px;  /* cukup besar */
+  opacity: 1;
+}
+
+/* Tertutup (dipaksa oleh class) */
+.student-photo-wrap.photo-is-closed {
+  max-height: 0 !important;
+  opacity: 0;
 }
 .student-photo {
   width: 100%;
