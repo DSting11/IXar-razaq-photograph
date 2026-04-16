@@ -1,18 +1,18 @@
 /* ═══════════════════════════════════════════════════════════
    ANGKATAN XV — SMP INTEGRAL HIDAYATULLAH TIMIKA
-   style.css (warna lebih terang, kartu tidak terlalu gelap, animasi tambahan)
+   style.css (dengan loading progress bar)
    ═══════════════════════════════════════════════════════════ */
 
 /* ── Variables ─────────────────────────────────────────── */
 :root {
-  --bg-start:    #0e3a24;   /* hijau tua tapi cerah */
-  --bg-end:      #1f5e3a;   /* hijau medium segar */
+  --bg-start:    #0e3a24;
+  --bg-end:      #1f5e3a;
   --primary:     #ffffff;
   --secondary:   #e2f0e6;
-  --accent:      #3edc7a;   /* hijau terang */
+  --accent:      #3edc7a;
   --accent-lt:   #b8f0d0;
   --border:      #2d7a4a;
-  --card-bg:     #2a6b42;   /* kartu lebih terang */
+  --card-bg:     #2a6b42;
   --card-bg-hover:#338255;
   --shadow:      0 8px 20px rgba(0,0,0,0.2);
   --shadow-lg:   0 16px 40px rgba(0,0,0,0.3);
@@ -553,7 +553,6 @@ a   { text-decoration: none; color: inherit; }
   position: relative;
   overflow: hidden;
   background: #1b4a2e;
-  /* Default state tersembunyi akan diatur oleh class photo-is-closed */
   max-height: 0;
   opacity: 0;
   transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.45s ease;
@@ -776,7 +775,7 @@ a   { text-decoration: none; color: inherit; }
 ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 8px; }
 
 /* ═══════════════════════════════════════════════════════════
-   LOADING SCREEN
+   LOADING SCREEN DENGAN PROGRESS BAR
    ═══════════════════════════════════════════════════════════ */
 
 .loading-screen {
@@ -803,6 +802,8 @@ a   { text-decoration: none; color: inherit; }
   text-align: center;
   color: white;
   font-family: var(--font-body);
+  width: 90%;
+  max-width: 400px;
   transform: translateY(-5%);
   animation: floatLoader 3s ease-in-out infinite;
 }
@@ -853,45 +854,34 @@ a   { text-decoration: none; color: inherit; }
   margin-bottom: 2rem;
 }
 
-.loading-spinner {
-  position: relative;
-  width: 60px;
-  height: 60px;
-  margin: 0 auto 1.5rem;
-}
-
-.spinner-ring {
-  position: absolute;
+/* Progress Bar Container */
+.loading-progress-container {
   width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
+  margin: 1.5rem 0 0.8rem;
+  overflow: hidden;
+  backdrop-filter: blur(4px);
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.loading-progress-bar {
   height: 100%;
-  border: 2px solid transparent;
-  border-top-color: var(--accent);
-  border-right-color: var(--accent-lt);
-  border-radius: 50%;
-  animation: spinRing 1.5s linear infinite;
+  background: linear-gradient(90deg, var(--accent), #8ef5b2);
+  border-radius: 20px;
+  width: 0%;
+  transition: width 0.3s ease-out;
+  box-shadow: 0 0 10px var(--accent);
 }
 
-.spinner-dot {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 8px;
-  height: 8px;
-  background: var(--accent);
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  box-shadow: 0 0 20px var(--accent);
-  animation: pulseDot 1.5s ease-in-out infinite;
-}
-
-@keyframes spinRing {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-@keyframes pulseDot {
-  0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
-  50% { opacity: 1; transform: translate(-50%, -50%) scale(1.8); }
+.loading-percent {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--accent-lt);
+  letter-spacing: 0.1em;
+  margin-bottom: 0.5rem;
 }
 
 .loading-text {
