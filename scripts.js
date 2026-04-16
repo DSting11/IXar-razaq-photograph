@@ -1,9 +1,9 @@
 /* ═══════════════════════════════════════════════════════════
    ANGKATAN XV — SMP INTEGRAL HIDAYATULLAH TIMIKA
-   script.js (emoji dihapus, icon pakai →, teks tidak baku)
+   script.js (lazy load .webp + observer)
    ═══════════════════════════════════════════════════════════ */
 
-/* ── Student Data (sama seperti sebelumnya) ───────────────── */
+/* ── Student Data (photo path changed to .webp) ───────────────── */
 const students = [
   { no:1, name:"Achmad Daniswara Javas Muchie", photo:"images/danis.webp", ttl:"Keerom, 3 Agustus 2011", alamat:"BTN Kamoro Indah Blok B No 27", hobi:"Mencari Hal Baru Tiap Hari", cita:"Cyber Network Security", kesan:"Menurut saya, MTK, fisika, dan bahasa Inggris adalah pelajaran paling berguna bagi saya di SMP ini karena mengetes logis dan berpikir kritis serta membantu saya memahami pelajaran tingkat lanjut di dunia komputer.", pesan:"Semoga SMP Hidayatullah lebih sering untuk mempraktek, karena orang pintar bukan lahir dari sekadar literasi tapi dimulai dari aksi.", lanjut:"SMA N 1 / 6" },
   { no:2, name:"Airlangga Azmi", photo:"images/airlangga.webp", ttl:"Timika, 12 April 2011", alamat:"Jln. K. H. Dewantara", hobi:"Olahraga", cita:"Pilot", kesan:"Tiga tahun di Hidayatullah penuh cerita. Ada pusingnya hafalan, deg-degannya setoran, rame pas olahraga, sampai ketawa ngakak di kantin pas jam istirahat. Di sini aku belajar disiplin, tanggung jawab, dan pentingnya jaga adab sama guru dan teman. Bangga jadi bagian Angkatan 15.", pesan:"Kepada seluruh Ustadz dan Ustadzah, jazaakumullahu khairan atas ilmu, bimbingan, dan kesabaran mendidik kami selama 3 tahun. Buat teman-teman Angkatan 15, semoga kita tetap istiqomah, jadi pribadi yang sholeh, dan sukses mengejar cita-cita.", lanjut:"STM" },
@@ -14,7 +14,7 @@ const students = [
   { no:7, name:"Fahrul Malik Julian D. Habbi", photo:"images/fahrul.webp", ttl:"29 Juli 2010", alamat:"SP 4 Jln. Cendrawasih", hobi:"Lari", cita:"Trakindo CAT", kesan:"Saya merasa senang bersekolah di Hidayatullah, karena memiliki banyak teman-teman yang baik, tidak hanya itu guru-guru yang sangat baik dan sabar.", pesan:"Semoga SMP Hidayatullah menjadi sekolah terfavorit dan banyak peminatnya, semoga teman-teman saya berhasil mencapai mimpinya.", lanjut:"SMA N 1 Mimika" },
   { no:8, name:"Farhan Saputra Tambunan", photo:"images/farhan.webp", ttl:"Timika, 27 Juli 2010", alamat:"SP 4 Jalur 7", hobi:"Berenang", cita:"TNI", kesan:"Selama bersekolah di SMP Integral Hidayatullah Timika, saya mendapatkan banyak ilmu pengetahuan agama, pelajaran, dan pengalaman yang tidak akan pernah saya lupakan.", pesan:"Semoga SMP Integral Hidayatullah Timika bisa melahirkan tokoh-tokoh agama yang hebat.", lanjut:"SMA Taruna" },
   { no:9, name:"Fathier Al Mu'min Putra Deylano", photo:"images/fathir.webp", ttl:"Timika, 27 Januari 2011", alamat:"BTN Kamoro Indah, SP 4", hobi:"Olahraga", cita:"Karyawan Freeport / Pembisnis Sukses", kesan:"Sekolahnya asik, gurunya baik, Hidayatullah tempat terbaik buat belajar... ditambah teman-teman semua sefrekuensi. Cape di Hidayatullah bukan cape belajar, tapi cape ketawain hal yang ngga jelas bareng teman.", pesan:"Semoga SMP Integral Hidayatullah terus mempertahankan cara pembelajaran yang memudahkan murid memahami materi, dan terus mencetak lulusan yang berakhlak mulia dan berprestasi.", lanjut:"STM / SMAN 6" },
-  { no:10, name:"Giza", photo:"images/giza.jpeg", ttl:"—", alamat:"—", hobi:"—", cita:"—", kesan:"Tidak di ketahui", pesan:"Tidak di ketauhi", lanjut:"Tidak di ketahui" },
+  { no:10, name:"Giza", photo:"images/giza.webp", ttl:"—", alamat:"—", hobi:"—", cita:"—", kesan:"Tidak di ketahui", pesan:"Tidak di ketauhi", lanjut:"Tidak di ketahui" },
   { no:11, name:"M. Malik Maulana Sabar", photo:"images/malik.webp", ttl:"Timika, 11 Januari 2011", alamat:"SP 1 Jalan Garuda Jalur 2", hobi:"Memasak", cita:"Pembalap Motor GP", kesan:"Selama sekolah di Hidayatullah saya mendapatkan banyak kenangan yang indah bersama teman-teman saya serta saya berterima kasih kepada guru-guru yang sudah mengajari saya.", pesan:"Semoga Hidayatullah ke depan lebih baik dan maju lagi, dan saya meminta maaf jika selama di sekolah banyak membuat kesalahan.", lanjut:"SMAN 1" },
   { no:12, name:"M. Nur Imron Romadhoni", photo:"images/imron.webp", ttl:"Jayapura, 11 September 2010", alamat:"Jayapura", hobi:"Pencak Silat", cita:"Pengusaha Sukses", kesan:"Selama saya sekolah di sini, saya mendapatkan pengalaman yang sangat banyak dan teman-teman yang sangat baik, serta guru-guru yang baik dan sabar dalam mengajar.", pesan:"Pesan dari saya buat adik-adik kelas jangan melawan guru dan jagalah adabnya dan jangan saling membully.", lanjut:"SMA Jayapura" },
   { no:13, name:"Muhammad Bilal Adzani", photo:"images/bilal.webp", ttl:"Timika, 10 Juni 2011", alamat:"Jln. Busiri Tengah", hobi:"Dengar Musik & Berenang", cita:"Pembalap Nascar", kesan:"Selama saya di sekolah ini saya mendapatkan ilmu dan teman yang banyak. Sekolah ini sangat berharga dan tidak akan terlupakan. Sekolah ini bukan hanya tempat untuk belajar, tetapi juga tempat untuk tumbuh, mengenal arti kebersamaan, kedisiplinan, dan tanggung jawab.", pesan:"Terima kasih kepada seluruh guru yang telah dengan sabar membimbing dan memberikan ilmu, serta kepada teman-teman yang selalu memberikan semangat dan kebersamaan. Semua kenangan yang ada akan selalu menjadi bagian penting dalam perjalanan hidup saya.", lanjut:"STM Kuala Kencana" },
@@ -67,17 +67,22 @@ function updateCountdown() {
 updateCountdown();
 setInterval(updateCountdown, 1000);
 
-/* ── Build Student Cards ──────────────────────────────────── */
+/* ── Build Student Cards with lazy image loading ──────────────── */
 function buildStudentCard(s) {
   const card = document.createElement('article');
   card.className = 'student-card';
   card.style.transitionDelay = `${(s.no % 3) * 0.07}s`;
   const hasData = s.kesan !== null && s.kesan !== "Tidak di ketahui";
+
   card.innerHTML = `
     <div class="student-number">${s.no}</div>
     <div class="student-photo-wrap">
-      <img src="${s.photo}" alt="Foto ${s.name}" class="student-photo" loading="lazy"
-        onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 200 200%22%3E%3Crect width=%22200%22 height=%22200%22 fill=%22%231b4a2e%22/%3E%3Ccircle cx=%22100%22 cy=%2285%22 r=%2240%22 fill=%22%233edc7a%22/%3E%3Crect x=%2245%22 y=%22140%22 width=%22110%22 height=%2270%22 rx=%2255%22 fill=%22%233edc7a%22/%3E%3C/svg%3E'" />
+      <img data-src="${s.photo}" 
+           alt="Foto ${s.name}" 
+           class="student-photo lazy-img" 
+           width="400" height="400"
+           src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'%3E%3Crect width='400' height='400' fill='%231b4a2e'/%3E%3C/svg%3E"
+           onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 200 200%22%3E%3Crect width=%22200%22 height=%22200%22 fill=%22%231b4a2e%22/%3E%3Ccircle cx=%22100%22 cy=%2285%22 r=%2240%22 fill=%22%233edc7a%22/%3E%3C/svg%3E';" />
       <div class="student-photo-overlay"></div>
     </div>
     <div class="student-bio">
@@ -99,9 +104,29 @@ function buildStudentCard(s) {
 }
 
 const grid = document.getElementById('studentsGrid');
-students.forEach(s => grid.appendChild(buildStudentCard(s)));
+const imageObserver = new IntersectionObserver((entries, observer) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const img = entry.target;
+      const src = img.getAttribute('data-src');
+      if (src) {
+        img.src = src;
+        img.removeAttribute('data-src');
+        img.classList.add('loaded');
+      }
+      observer.unobserve(img);
+    }
+  });
+}, { rootMargin: '200px 0px', threshold: 0.01 });
 
-/* ── Intersection Observer ───────────────────────────────── */
+students.forEach(s => {
+  const card = buildStudentCard(s);
+  grid.appendChild(card);
+  const img = card.querySelector('.student-photo');
+  if (img) imageObserver.observe(img);
+});
+
+/* ── Intersection Observer for fade-up animation ───────────────── */
 const revealObserver = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
@@ -122,6 +147,7 @@ const cardObserver = new IntersectionObserver((entries) => {
 }, { threshold: 0.1 });
 document.querySelectorAll('.student-card').forEach((card, i) => { card.dataset.index = i; cardObserver.observe(card); });
 
+/* ── Header load & particle animation ───────────────────────── */
 window.addEventListener('load', () => {
   const header = document.querySelector('.site-header');
   header.classList.add('loaded');
