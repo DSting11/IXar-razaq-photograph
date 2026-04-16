@@ -1,9 +1,9 @@
 /* ═══════════════════════════════════════════════════════════
    ANGKATAN XV — SMP INTEGRAL HIDAYATULLAH TIMIKA
-   script.js (lazy load .webp + observer)
+   script.js (lazy load .webp + toggle detail)
    ═══════════════════════════════════════════════════════════ */
 
-/* ── Student Data (photo path changed to .webp) ───────────────── */
+/* ── Student Data (.webp) ────────────────────────────────── */
 const students = [
   { no:1, name:"Achmad Daniswara Javas Muchie", photo:"images/danis.webp", ttl:"Keerom, 3 Agustus 2011", alamat:"BTN Kamoro Indah Blok B No 27", hobi:"Mencari Hal Baru Tiap Hari", cita:"Cyber Network Security", kesan:"Menurut saya, MTK, fisika, dan bahasa Inggris adalah pelajaran paling berguna bagi saya di SMP ini karena mengetes logis dan berpikir kritis serta membantu saya memahami pelajaran tingkat lanjut di dunia komputer.", pesan:"Semoga SMP Hidayatullah lebih sering untuk mempraktek, karena orang pintar bukan lahir dari sekadar literasi tapi dimulai dari aksi.", lanjut:"SMA N 1 / 6" },
   { no:2, name:"Airlangga Azmi", photo:"images/airlangga.webp", ttl:"Timika, 12 April 2011", alamat:"Jln. K. H. Dewantara", hobi:"Olahraga", cita:"Pilot", kesan:"Tiga tahun di Hidayatullah penuh cerita. Ada pusingnya hafalan, deg-degannya setoran, rame pas olahraga, sampai ketawa ngakak di kantin pas jam istirahat. Di sini aku belajar disiplin, tanggung jawab, dan pentingnya jaga adab sama guru dan teman. Bangga jadi bagian Angkatan 15.", pesan:"Kepada seluruh Ustadz dan Ustadzah, jazaakumullahu khairan atas ilmu, bimbingan, dan kesabaran mendidik kami selama 3 tahun. Buat teman-teman Angkatan 15, semoga kita tetap istiqomah, jadi pribadi yang sholeh, dan sukses mengejar cita-cita.", lanjut:"STM" },
@@ -67,12 +67,21 @@ function updateCountdown() {
 updateCountdown();
 setInterval(updateCountdown, 1000);
 
-/* ── Build Student Cards (dengan mekanisme load/unload) ──────────────── */
+/* ── Build Student Cards (dengan toggle detail + lazy load gambar) ── */
 function buildStudentCard(s) {
   const card = document.createElement('article');
   card.className = 'student-card';
   card.style.transitionDelay = `${(s.no % 3) * 0.07}s`;
-  const hasData = s.kesan !== null && s.kesan !== "Tidak di ketahui";
+  const hasData = s.kesan && s.kesan !== "Tidak di ketahui";
+
+  // Konten detail yang akan di-toggle
+  const detailHtml = hasData ? `
+    <div class="student-detail-content" style="display: none;">
+      <div class="student-text-block"><p class="text-block-label">Kesan</p><p class="text-block-content">${s.kesan}</p></div>
+      <div class="student-text-block"><p class="text-block-label">Pesan</p><p class="text-block-content">${s.pesan}</p></div>
+      ${s.lanjut && s.lanjut !== "—" ? `<span class="student-next-school">${s.lanjut}</span>` : ''}
+    </div>
+  ` : `<p class="student-no-data">Kenangan tersimpan dalam hati</p>`;
 
   card.innerHTML = `
     <div class="student-number">${s.no}</div>
@@ -93,13 +102,30 @@ function buildStudentCard(s) {
         <span class="meta-key">Hobi</span><span class="meta-val">${s.hobi}</span>
         <span class="meta-key">Cita-Cita</span><span class="meta-val">${s.cita}</span>
       </div>
+      
       ${hasData ? `
-        <div class="student-text-block"><p class="text-block-label">Kesan</p><p class="text-block-content">${s.kesan}</p></div>
-        <div class="student-text-block"><p class="text-block-label">Pesan</p><p class="text-block-content">${s.pesan}</p></div>
-        ${s.lanjut && s.lanjut !== "—" ? `<span class="student-next-school">${s.lanjut}</span>` : ''}
-      ` : `<p class="student-no-data">Kenangan tersimpan dalam hati</p>`}
+        <button class="toggle-detail-btn" aria-expanded="false">
+          <span class="toggle-icon">▼</span> Lihat Kesan & Pesan
+        </button>
+        ${detailHtml}
+      ` : detailHtml}
     </div>
   `;
+
+  // Event listener untuk tombol toggle
+  if (hasData) {
+    const btn = card.querySelector('.toggle-detail-btn');
+    const detailDiv = card.querySelector('.student-detail-content');
+    const icon = btn.querySelector('.toggle-icon');
+    
+    btn.addEventListener('click', () => {
+      const isOpen = detailDiv.style.display === 'block';
+      detailDiv.style.display = isOpen ? 'none' : 'block';
+      icon.textContent = isOpen ? '▼' : '▲';
+      btn.setAttribute('aria-expanded', !isOpen);
+    });
+  }
+
   return card;
 }
 
@@ -112,27 +138,26 @@ const imageLoadUnloadObserver = new IntersectionObserver((entries) => {
     const realSrc = img.getAttribute('data-src');
 
     if (entry.isIntersecting) {
-      // Masuk viewport → mulai unduh jika belum ada src yang sesuai
+      // Masuk viewport → muat gambar jika belum
       if (!img.src || img.src.includes('data:image') || img.src !== realSrc) {
-        // Hanya set src jika belum memuat gambar yang benar
         img.src = realSrc;
-        img.classList.add('loading'); // opsional untuk indikator loading
+        // Setelah gambar selesai dimuat, hapus class loading
+        img.onload = () => img.classList.remove('loading');
+        img.onerror = () => img.classList.remove('loading');
+        img.classList.add('loading');
       }
     } else {
-      // Keluar viewport → batalkan unduh & kosongkan src
+      // Keluar viewport → kosongkan src untuk hemat memori
       if (img.src && !img.src.includes('data:image')) {
-        // Batalkan request jika memungkinkan (browser-dependent)
-        if ('src' in img) {
-          img.src = ''; // atau set ke placeholder kosong
-          // Jangan lupa kembalikan placeholder SVG agar tidak blank
-          img.src = 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 400 400\'%3E%3Crect width=\'400\' height=\'400\' fill=\'%231b4a2e\'/%3E%3C/svg%3E';
-        }
+        img.removeAttribute('src');
+        // Kembalikan placeholder SVG agar tidak blank
+        img.src = 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 400 400\'%3E%3Crect width=\'400\' height=\'400\' fill=\'%231b4a2e\'/%3E%3C/svg%3E';
         img.classList.remove('loading');
       }
     }
   });
 }, {
-  rootMargin: '50px 0px', // sedikit margin agar mulai unduh sebelum benar-benar masuk
+  rootMargin: '100px 0px', // mulai unduh sedikit lebih awal
   threshold: 0.01
 });
 
@@ -143,7 +168,7 @@ students.forEach(s => {
   if (img) imageLoadUnloadObserver.observe(img);
 });
 
-/* ── Intersection Observer for fade-up animation ───────────────── */
+/* ── Intersection Observer untuk animasi fade-up ───────────────── */
 const revealObserver = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
