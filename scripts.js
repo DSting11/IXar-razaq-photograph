@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════════════════════
    ANGKATAN XV — SMP INTEGRAL HIDAYATULLAH TIMIKA
-   script.js (Foto default tersembunyi)
+   script.js (Foto default tersembunyi + Loading Screen)
    ═══════════════════════════════════════════════════════════ */
 
 /* ── Student Data ─────────────────────────────────────────── */
@@ -67,7 +67,7 @@ function updateCountdown() {
 updateCountdown();
 setInterval(updateCountdown, 1000);
 
-/* ── SVG Placeholder (gambar kosong transparan) ─────── */
+/* ── Placeholder (gambar kosong / fallback) ──────────────── */
 const EMPTY_PLACEHOLDER = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Crect width='200' height='200' fill='%232a6b42'/%3E%3C/svg%3E";
 const FALLBACK_PLACEHOLDER = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Crect width='200' height='200' fill='%231b4a2e'/%3E%3Ccircle cx='100' cy='85' r='40' fill='%233edc7a'/%3E%3Crect x='45' y='140' width='110' height='70' rx='55' fill='%233edc7a'/%3E%3C/svg%3E";
 
@@ -221,16 +221,29 @@ document.querySelectorAll('.student-card').forEach((card, i) => {
   cardObserver.observe(card);
 });
 
-/* ── Header + Particles ──────────────────────────────────── */
+/* ── Header + Particles + Loading Screen ─────────────────── */
 window.addEventListener('load', () => {
+  // Loading screen fade out
+  const loader = document.getElementById('loadingScreen');
+  if (loader) {
+    setTimeout(() => {
+      loader.classList.add('fade-out');
+      loader.addEventListener('transitionend', () => {
+        loader.remove();
+      }, { once: true });
+    }, 600);
+  }
+
+  // Header animation
   document.querySelector('.site-header').classList.add('loaded');
 
+  // Particles
   const particles = document.querySelector('.particles');
   for (let i = 0; i < 35; i++) {
     const span = document.createElement('span');
-    span.style.left              = Math.random() * 100 + 'vw';
+    span.style.left = Math.random() * 100 + 'vw';
     span.style.animationDuration = (6 + Math.random() * 10) + 's';
-    span.style.animationDelay   = (Math.random() * 5) + 's';
+    span.style.animationDelay = (Math.random() * 5) + 's';
     particles.appendChild(span);
   }
 });
