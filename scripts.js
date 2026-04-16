@@ -1,9 +1,9 @@
 /* ═══════════════════════════════════════════════════════════
    ANGKATAN XV — SMP INTEGRAL HIDAYATULLAH TIMIKA
-   script.js (Foto default tersembunyi + Loading Screen)
+   script.js (Loading Progress Real + Foto Default Tersembunyi)
    ═══════════════════════════════════════════════════════════ */
 
-/* ── Student Data ─────────────────────────────────────────── */
+/* ── Student Data (23 siswa lengkap) ─────────────────────── */
 const students = [
   { no:1, name:"Achmad Daniswara Javas Muchie", photo:"images/danis.webp", ttl:"Keerom, 3 Agustus 2011", alamat:"BTN Kamoro Indah Blok B No 27", hobi:"Mencari Hal Baru Tiap Hari", cita:"Cyber Network Security", kesan:"Menurut saya, MTK, fisika, dan bahasa Inggris adalah pelajaran paling berguna bagi saya di SMP ini karena mengetes logis dan berpikir kritis serta membantu saya memahami pelajaran tingkat lanjut di dunia komputer.", pesan:"Semoga SMP Hidayatullah lebih sering untuk mempraktek, karena orang pintar bukan lahir dari sekadar literasi tapi dimulai dari aksi.", lanjut:"SMA N 1 / 6" },
   { no:2, name:"Airlangga Azmi", photo:"images/airlangga.webp", ttl:"Timika, 12 April 2011", alamat:"Jln. K. H. Dewantara", hobi:"Olahraga", cita:"Pilot", kesan:"Tiga tahun di Hidayatullah penuh cerita. Ada pusingnya hafalan, deg-degannya setoran, rame pas olahraga, sampai ketawa ngakak di kantin pas jam istirahat. Di sini aku belajar disiplin, tanggung jawab, dan pentingnya jaga adab sama guru dan teman. Bangga jadi bagian Angkatan 15.", pesan:"Kepada seluruh Ustadz dan Ustadzah, jazaakumullahu khairan atas ilmu, bimbingan, dan kesabaran mendidik kami selama 3 tahun. Buat teman-teman Angkatan 15, semoga kita tetap istiqomah, jadi pribadi yang sholeh, dan sukses mengejar cita-cita.", lanjut:"STM" },
@@ -67,31 +67,120 @@ function updateCountdown() {
 updateCountdown();
 setInterval(updateCountdown, 1000);
 
-/* ── Placeholder (gambar kosong / fallback) ──────────────── */
+/* ── Placeholder (gambar kosong & fallback) ──────────────── */
 const EMPTY_PLACEHOLDER = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Crect width='200' height='200' fill='%232a6b42'/%3E%3C/svg%3E";
 const FALLBACK_PLACEHOLDER = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Crect width='200' height='200' fill='%231b4a2e'/%3E%3Ccircle cx='100' cy='85' r='40' fill='%233edc7a'/%3E%3Crect x='45' y='140' width='110' height='70' rx='55' fill='%233edc7a'/%3E%3C/svg%3E";
 
-/* ── Build Student Cards (default foto tersembunyi) ──────── */
+/* ── Loading Screen dengan Progress Real ─────────────────── */
+(function initLoadingScreen() {
+  const loader = document.getElementById('loadingScreen');
+  const progressBar = document.getElementById('loadingProgressBar');
+  const percentText = document.getElementById('loadingPercent');
+  const statusText = document.getElementById('loadingStatus');
+
+  // Resource KRITIS yang dipantau (logo + 2 foto bersama)
+  const criticalResources = [
+    'images/logo.webp',
+    'images/foto_bersama.webp',
+    'images/foto_bersama2.webp'
+  ];
+
+  let totalResources = criticalResources.length;
+  let loadedCount = 0;
+  let hasFinished = false;
+  const MAX_TIME = 25000; // 25 detik
+  const startTime = Date.now();
+
+  function updateProgress() {
+    const percent = Math.floor((loadedCount / totalResources) * 100);
+    progressBar.style.width = percent + '%';
+    percentText.textContent = percent + '%';
+    if (percent < 100) {
+      statusText.textContent = `Memuat aset (${loadedCount}/${totalResources})...`;
+    } else {
+      statusText.textContent = 'Siap! Mengalihkan...';
+    }
+  }
+
+  function finishLoading() {
+    if (hasFinished) return;
+    hasFinished = true;
+    progressBar.style.width = '100%';
+    percentText.textContent = '100%';
+    statusText.textContent = 'Selamat datang!';
+    setTimeout(() => {
+      loader.classList.add('fade-out');
+      loader.addEventListener('transitionend', () => {
+        loader.remove();
+        // Mulai animasi header dan particles setelah loader hilang
+        document.querySelector('.site-header').classList.add('loaded');
+        initParticles();
+      }, { once: true });
+    }, 400);
+  }
+
+  const timeoutId = setTimeout(() => {
+    if (!hasFinished) {
+      console.warn('Loading timeout setelah 25 detik, melanjutkan.');
+      finishLoading();
+    }
+  }, MAX_TIME);
+
+  function resourceDone() {
+    loadedCount++;
+    updateProgress();
+    if (loadedCount >= totalResources) {
+      clearTimeout(timeoutId);
+      finishLoading();
+    }
+  }
+
+  criticalResources.forEach(url => {
+    const img = new Image();
+    img.onload = resourceDone;
+    img.onerror = () => {
+      console.warn('Gagal memuat:', url);
+      resourceDone();
+    };
+    img.src = url;
+  });
+
+  if (totalResources === 0) {
+    finishLoading();
+  } else {
+    updateProgress();
+  }
+
+  window.initParticles = function() {
+    const particles = document.querySelector('.particles');
+    if (!particles) return;
+    for (let i = 0; i < 35; i++) {
+      const span = document.createElement('span');
+      span.style.left = Math.random() * 100 + 'vw';
+      span.style.animationDuration = (6 + Math.random() * 10) + 's';
+      span.style.animationDelay = (Math.random() * 5) + 's';
+      particles.appendChild(span);
+    }
+  };
+})();
+
+/* ── Build Student Cards (foto default tersembunyi) ──────── */
 function buildStudentCard(s) {
   const card = document.createElement('article');
   card.className = 'student-card';
   card.style.transitionDelay = `${(s.no % 3) * 0.07}s`;
 
   const hasData = s.kesan !== null && s.kesan !== "Tidak di ketahui";
-
-  // Path foto asli disimpan di tombol nanti
   const photoSrc = s.photo;
 
   card.innerHTML = `
     <div class="student-number">${s.no}</div>
 
-    <!-- Tombol toggle foto (default: foto tersembunyi) -->
     <button class="photo-toggle-btn" data-open="false" data-src="${photoSrc}" aria-label="Tampilkan foto ${s.name}">
       <span class="ptb-icon">&#9660;</span>
       <span class="ptb-label">Tampilkan Foto</span>
     </button>
 
-    <!-- Wrapper foto — default collapsed -->
     <div class="student-photo-wrap photo-is-closed">
       <img
         src="${EMPTY_PLACEHOLDER}"
@@ -126,7 +215,6 @@ function buildStudentCard(s) {
     </div>
   `;
 
-  /* ── Toggle Logic (default tertutup) ───────────────────── */
   const btn  = card.querySelector('.photo-toggle-btn');
   const wrap = card.querySelector('.student-photo-wrap');
   const img  = card.querySelector('.student-photo');
@@ -135,27 +223,24 @@ function buildStudentCard(s) {
     const isOpen = btn.dataset.open === 'true';
 
     if (isOpen) {
-      // ── TUTUP ──
-      // Set height eksplisit agar animasi collapse berfungsi
+      // Tutup foto
       wrap.style.maxHeight = wrap.scrollHeight + 'px';
-      void wrap.offsetHeight; // reflow
+      void wrap.offsetHeight;
 
       wrap.classList.remove('photo-is-open');
       wrap.classList.add('photo-is-closed');
 
-      // Setelah transisi selesai, kosongkan src (hemat memori)
       wrap.addEventListener('transitionend', () => {
         img.src = EMPTY_PLACEHOLDER;
-        img.removeAttribute('src'); // opsional
+        img.removeAttribute('src');
       }, { once: true });
 
       btn.dataset.open = 'false';
       btn.querySelector('.ptb-icon').innerHTML  = '&#9660;';
       btn.querySelector('.ptb-label').textContent = 'Tampilkan Foto';
       btn.setAttribute('aria-label', `Tampilkan foto ${s.name}`);
-
     } else {
-      // ── BUKA ──
+      // Buka foto
       const realSrc = img.dataset.realSrc;
       img.src = realSrc;
       img.onerror = function () {
@@ -163,18 +248,16 @@ function buildStudentCard(s) {
         this.onerror = null;
       };
 
-      // Tunggu gambar mulai dimuat, lalu expand
       const expand = () => {
         wrap.classList.remove('photo-is-closed');
         wrap.classList.add('photo-is-open');
-        wrap.style.maxHeight = ''; // lepas batasan inline
+        wrap.style.maxHeight = '';
       };
 
       if (img.complete) {
         expand();
       } else {
         img.onload = expand;
-        // fallback jika load lama
         setTimeout(expand, 120);
       }
 
@@ -188,11 +271,11 @@ function buildStudentCard(s) {
   return card;
 }
 
-/* ── Render semua kartu ─────────────────────────────────── */
+/* ── Render Semua Kartu ──────────────────────────────────── */
 const grid = document.getElementById('studentsGrid');
 students.forEach(s => grid.appendChild(buildStudentCard(s)));
 
-/* ── Intersection Observer (scroll reveal) ────────────────── */
+/* ── Intersection Observer (scroll reveal) ───────────────── */
 const revealObserver = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
@@ -221,29 +304,15 @@ document.querySelectorAll('.student-card').forEach((card, i) => {
   cardObserver.observe(card);
 });
 
-/* ── Header + Particles + Loading Screen ─────────────────── */
+/* ── Fallback jika loading screen macet ──────────────────── */
 window.addEventListener('load', () => {
-  // Loading screen fade out
-  const loader = document.getElementById('loadingScreen');
-  if (loader) {
-    setTimeout(() => {
+  setTimeout(() => {
+    const loader = document.getElementById('loadingScreen');
+    if (loader && !loader.classList.contains('fade-out')) {
       loader.classList.add('fade-out');
-      loader.addEventListener('transitionend', () => {
-        loader.remove();
-      }, { once: true });
-    }, 600);
-  }
-
-  // Header animation
-  document.querySelector('.site-header').classList.add('loaded');
-
-  // Particles
-  const particles = document.querySelector('.particles');
-  for (let i = 0; i < 35; i++) {
-    const span = document.createElement('span');
-    span.style.left = Math.random() * 100 + 'vw';
-    span.style.animationDuration = (6 + Math.random() * 10) + 's';
-    span.style.animationDelay = (Math.random() * 5) + 's';
-    particles.appendChild(span);
-  }
+      loader.addEventListener('transitionend', () => loader.remove(), { once: true });
+      document.querySelector('.site-header').classList.add('loaded');
+      if (typeof initParticles === 'function') initParticles();
+    }
+  }, 1000);
 });
