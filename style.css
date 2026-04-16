@@ -1,31 +1,27 @@
 /* ═══════════════════════════════════════════════════════════
    ANGKATAN XV — SMP INTEGRAL HIDAYATULLAH TIMIKA
-   style.css (warna lebih terang, kartu tidak terlalu gelap, animasi tambahan)
+   style.css (dioptimalkan performa, dekorasi tetap utuh)
    ═══════════════════════════════════════════════════════════ */
 
-/* ── Variables ─────────────────────────────────────────── */
 :root {
-  --bg-start:    #0e3a24;   /* hijau tua tapi cerah */
-  --bg-end:      #1f5e3a;   /* hijau medium segar */
+  --bg-start:    #0e3a24;
+  --bg-end:      #1f5e3a;
   --primary:     #ffffff;
   --secondary:   #e2f0e6;
-  --accent:      #3edc7a;   /* hijau terang */
+  --accent:      #3edc7a;
   --accent-lt:   #b8f0d0;
   --border:      #2d7a4a;
-  --card-bg:     #2a6b42;   /* kartu lebih terang */
+  --card-bg:     #2a6b42;
   --card-bg-hover:#338255;
   --shadow:      0 8px 20px rgba(0,0,0,0.2);
   --shadow-lg:   0 16px 40px rgba(0,0,0,0.3);
-
   --font-display: 'Cormorant Garamond', Georgia, serif;
   --font-body:    'Jost', 'Helvetica Neue', sans-serif;
-
   --radius:       12px;
   --radius-lg:    20px;
   --transition:   0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1);
 }
 
-/* ── Reset & Base ───────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 html { scroll-behavior: smooth; font-size: 16px; }
@@ -48,7 +44,7 @@ a   { text-decoration: none; color: inherit; }
   padding-inline: clamp(1.25rem, 5vw, 3rem);
 }
 
-/* ── Background Decorations ─────────────────────────────── */
+/* ── Background Decorations (optimized) ─────────────────── */
 .bg-deco {
   position: fixed;
   inset: 0;
@@ -63,46 +59,40 @@ a   { text-decoration: none; color: inherit; }
   background-image: radial-gradient(circle, rgba(62,220,122,0.25) 1px, transparent 1px);
   background-size: 28px 28px;
   opacity: 0.4;
+  will-change: transform;
 }
 
-.particles span {
+/* Canvas particles menggantikan span DOM */
+.particles {
   position: absolute;
-  width: 5px;
-  height: 5px;
-  background: rgba(184,240,208,0.6);
-  border-radius: 50%;
-  animation: floatParticle 12s linear infinite;
-  filter: blur(1px);
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
 }
 
-@keyframes floatParticle {
-  0%   { transform: translateY(100vh) scale(0.6); opacity: 0; }
-  20%  { opacity: 0.8; }
-  80%  { opacity: 0.6; }
-  100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
-}
-
+/* Blob tanpa blur berat → pakai radial gradient */
 .bg-blob {
   position: absolute;
   border-radius: 50%;
-  filter: blur(80px);
-  opacity: 0.2;
+  opacity: 0.25;
+  will-change: transform;
 }
 .bg-blob--1 {
   width: 500px; height: 500px;
-  background: #3edc7a;
+  background: radial-gradient(circle, #3edc7a 0%, transparent 70%);
   top: -120px; right: -140px;
   animation: blobFloat 16s ease-in-out infinite alternate;
 }
 .bg-blob--2 {
   width: 400px; height: 400px;
-  background: #2ecc71;
+  background: radial-gradient(circle, #2ecc71 0%, transparent 70%);
   bottom: 15%; left: -100px;
   animation: blobFloat 20s ease-in-out infinite alternate-reverse;
 }
 .bg-blob--3 {
   width: 320px; height: 320px;
-  background: #b8f0d0;
+  background: radial-gradient(circle, #b8f0d0 0%, transparent 70%);
   bottom: 5%; right: 10%;
   animation: blobFloat 14s ease-in-out infinite alternate;
 }
@@ -112,11 +102,13 @@ a   { text-decoration: none; color: inherit; }
   to   { transform: translate(25px, 15px) scale(1.1); }
 }
 
+/* Corner ornaments */
 .corner-ornament {
   position: fixed;
   width: 90px; height: 90px;
   pointer-events: none;
   z-index: 1;
+  will-change: transform;
 }
 .corner-tl {
   top: 20px; left: 20px;
@@ -133,18 +125,19 @@ a   { text-decoration: none; color: inherit; }
   opacity: 0.5;
 }
 
-/* ── Scroll Reveal ───────────────────────────────────────── */
+/* Scroll reveal */
 .fade-up {
   opacity: 0;
   transform: translateY(36px);
   transition: opacity 0.8s ease, transform 0.8s ease;
+  will-change: transform, opacity;
 }
 .fade-up.visible {
   opacity: 1;
   transform: translateY(0);
 }
 
-/* ── Header ─────────────────────────────────────────────── */
+/* Header */
 .site-header {
   position: relative;
   z-index: 10;
@@ -154,6 +147,7 @@ a   { text-decoration: none; color: inherit; }
   opacity: 0;
   transform: translateY(-20px);
   transition: opacity 0.9s ease, transform 0.9s ease;
+  will-change: transform, opacity;
 }
 .site-header.loaded {
   opacity: 1;
@@ -178,6 +172,7 @@ a   { text-decoration: none; color: inherit; }
   border-radius: 50%;
   opacity: 0.4;
   animation: rotateSlow 18s linear infinite;
+  will-change: transform;
 }
 @keyframes rotateSlow {
   from { transform: rotate(0deg); }
@@ -192,6 +187,7 @@ a   { text-decoration: none; color: inherit; }
   border: 3px solid rgba(255,255,255,0.9);
   box-shadow: 0 6px 24px rgba(62,220,122,0.3);
   transition: transform var(--transition), box-shadow 0.3s;
+  will-change: transform;
 }
 .header-logo:hover { transform: scale(1.05); box-shadow: 0 8px 28px rgba(62,220,122,0.5); }
 
@@ -214,8 +210,8 @@ a   { text-decoration: none; color: inherit; }
   line-height: 1;
   letter-spacing: -0.01em;
   background: linear-gradient(135deg, #fff, #c8e6d9);
-  background-clip: text;
   -webkit-background-clip: text;
+  background-clip: text;
   color: transparent;
 }
 .accent-text {
@@ -252,13 +248,14 @@ a   { text-decoration: none; color: inherit; }
   font-size: 0.7rem;
   color: var(--accent);
   animation: pulseDiamond 2.5s ease-in-out infinite;
+  will-change: transform;
 }
 @keyframes pulseDiamond {
   0%, 100% { transform: scale(1); opacity: 0.8; text-shadow: 0 0 2px var(--accent);}
   50%      { transform: scale(1.5); opacity: 1; text-shadow: 0 0 8px var(--accent);}
 }
 
-/* ── Section Typography ──────────────────────────────────── */
+/* Section typography */
 .section-overline {
   font-family: var(--font-body);
   font-weight: 600;
@@ -298,7 +295,7 @@ a   { text-decoration: none; color: inherit; }
   margin-bottom: 2.5rem;
 }
 
-/* ── Ornament Divider ────────────────────────────────────── */
+/* Ornament divider */
 .ornament-divider {
   display: flex;
   align-items: center;
@@ -314,6 +311,7 @@ a   { text-decoration: none; color: inherit; }
   font-size: 0.7rem;
   color: var(--accent);
   animation: gentlePulse 2s infinite;
+  will-change: transform;
 }
 @keyframes gentlePulse {
   0% { opacity: 0.5; transform: scale(1);}
@@ -321,7 +319,7 @@ a   { text-decoration: none; color: inherit; }
   100% { opacity: 0.5; transform: scale(1);}
 }
 
-/* ── Countdown ───────────────────────────────────────────── */
+/* Countdown */
 .countdown-section {
   text-align: center;
   padding-block: clamp(2rem, 6vw, 4rem);
@@ -338,17 +336,18 @@ a   { text-decoration: none; color: inherit; }
   letter-spacing: 0.03em;
 }
 
+/* Ganti backdrop-filter dengan background semi-transparan */
 .countdown-board {
   display: inline-flex;
   align-items: center;
   gap: clamp(0.5rem, 2vw, 1.5rem);
-  background: rgba(20, 50, 30, 0.55);
-  backdrop-filter: blur(8px);
+  background: rgba(20, 50, 30, 0.65);
   border: 1px solid rgba(62,220,122,0.4);
   border-radius: var(--radius-lg);
   padding: clamp(1rem, 3vw, 2rem) clamp(1.5rem, 4vw, 3rem);
   box-shadow: 0 20px 36px -12px rgba(0,0,0,0.3);
-  transition: all 0.3s;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  will-change: transform;
 }
 .countdown-board:hover {
   border-color: var(--accent);
@@ -369,8 +368,9 @@ a   { text-decoration: none; color: inherit; }
   font-size: clamp(2rem, 5vw, 3.8rem);
   line-height: 1;
   color: var(--primary);
-  transition: all 0.2s ease;
+  transition: transform 0.2s ease;
   text-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  will-change: transform;
 }
 .cd-num.tick {
   animation: tickFlip 0.28s ease-out;
@@ -407,7 +407,7 @@ a   { text-decoration: none; color: inherit; }
   margin-top: 1.8rem;
 }
 
-/* ── Group Photos ── */
+/* Group photos */
 .group-section {
   position: relative;
   z-index: 2;
@@ -418,33 +418,22 @@ a   { text-decoration: none; color: inherit; }
   grid-template-columns: 1fr;
   gap: 3.5rem;
 }
-
 .group-card {
   max-width: 1000px;
   margin-inline: auto;
 }
-
-.group-photo-wrap {
-  aspect-ratio: auto;
-}
-
-.group-photo {
-  width: 100%;
-  height: auto;
-}
-
 .group-card {
   position: relative;
   border-radius: var(--radius-lg);
   overflow: hidden;
   box-shadow: var(--shadow-lg);
   transition: transform var(--transition), box-shadow var(--transition);
+  will-change: transform;
 }
 .group-card:hover {
   transform: translateY(-8px) scale(1.01);
   box-shadow: 0 28px 48px rgba(0,0,0,0.4);
 }
-
 .group-photo-wrap {
   position: relative;
   aspect-ratio: 4/3;
@@ -457,14 +446,13 @@ a   { text-decoration: none; color: inherit; }
   background: linear-gradient(to bottom, transparent 55%, rgba(0,0,0,0.65));
   z-index: 1;
 }
-
 .group-photo {
   width: 100%; height: 100%;
   object-fit: cover;
   transition: transform 0.7s ease;
+  will-change: transform;
 }
 .group-card:hover .group-photo { transform: scale(1.08); }
-
 .group-overlay {
   position: absolute;
   bottom: 0; left: 0; right: 0;
@@ -480,34 +468,32 @@ a   { text-decoration: none; color: inherit; }
   color: rgba(255,255,255,0.9);
 }
 
-/* ── Students Grid ───────────────────────────────────────── */
+/* Students grid */
 .students-section {
   position: relative;
   z-index: 2;
   padding-bottom: clamp(3rem, 8vw, 6rem);
 }
-
 .students-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: clamp(1.2rem, 2.5vw, 2rem);
 }
-
 @media (max-width: 900px) { .students-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 540px) { .students-grid { grid-template-columns: 1fr; } }
 
-/* ── Student Card ────────────────────────────────────────── */
+/* Student card */
 .student-card {
   background: var(--card-bg);
   border: 1px solid rgba(62,220,122,0.3);
   border-radius: var(--radius-lg);
   overflow: hidden;
   box-shadow: var(--shadow);
-  transition: all 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.2);
+  transition: transform 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.2), background 0.3s, box-shadow 0.3s, border-color 0.3s;
   position: relative;
   opacity: 0;
   transform: translateY(30px);
-  backdrop-filter: blur(2px);
+  will-change: transform, opacity;
 }
 .student-card.visible {
   opacity: 1;
@@ -519,7 +505,6 @@ a   { text-decoration: none; color: inherit; }
   box-shadow: 0 24px 44px rgba(0,0,0,0.35);
   border-color: var(--accent);
 }
-
 .student-card::before {
   content: '';
   position: absolute;
@@ -545,7 +530,8 @@ a   { text-decoration: none; color: inherit; }
   display: grid;
   place-items: center;
   box-shadow: 0 2px 12px rgba(62,220,122,0.5);
-  transition: transform 0.2s;
+  transition: transform 0.2s, background 0.2s;
+  will-change: transform;
 }
 .student-card:hover .student-number { transform: scale(1.05); background: #2ecc71; }
 
@@ -559,6 +545,7 @@ a   { text-decoration: none; color: inherit; }
   height: auto;
   object-position: top center;
   transition: transform 0.55s ease;
+  will-change: transform;
 }
 .student-card:hover .student-photo { transform: scale(1.05); }
 
@@ -638,7 +625,7 @@ a   { text-decoration: none; color: inherit; }
   font-weight: 600;
   letter-spacing: 0.05em;
   color: var(--accent-lt);
-  transition: all 0.2s;
+  transition: background 0.2s, color 0.2s;
 }
 .student-card:hover .student-next-school {
   background: rgba(62,220,122,0.4);
@@ -658,15 +645,14 @@ a   { text-decoration: none; color: inherit; }
   padding: 1rem 0 0.5rem;
 }
 
-/* ── Footer ──────────────────────────────────────────────── */
+/* Footer — tanpa backdrop-filter */
 .site-footer {
   position: relative;
   z-index: 2;
   text-align: center;
   padding: clamp(2.5rem, 6vw, 4rem) var(--pad, 2rem) clamp(1.5rem, 4vw, 2.5rem);
   border-top: 1px solid rgba(62,220,122,0.3);
-  background: rgba(14,58,36,0.7);
-  backdrop-filter: blur(4px);
+  background: rgba(14,58,36,0.8);
 }
 
 .footer-ornament {
@@ -675,6 +661,7 @@ a   { text-decoration: none; color: inherit; }
   letter-spacing: 0.5em;
   margin-bottom: 1.5rem;
   animation: gentlePulse 3s infinite;
+  will-change: transform;
 }
 
 .footer-school {
@@ -709,7 +696,7 @@ a   { text-decoration: none; color: inherit; }
   letter-spacing: 0.05em;
 }
 
-/* ── Responsive ───────────────────────────────────── */
+/* Responsive */
 @media (max-width: 600px) {
   .header-inner { flex-direction: column; text-align: center; }
   .header-logo-wrap::after { display: none; }
