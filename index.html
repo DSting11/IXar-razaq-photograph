@@ -17,11 +17,13 @@
       </div>
       <h2 class="loading-title">Angkatan <span>XV</span></h2>
       <p class="loading-sub">SMP Integral Hidayatullah Timika</p>
-      <div class="loading-spinner">
-        <div class="spinner-ring"></div>
-        <div class="spinner-dot"></div>
+      
+      <!-- Progress Bar Container -->
+      <div class="loading-progress-container">
+        <div class="loading-progress-bar" id="loadingProgressBar" style="width: 0%;"></div>
       </div>
-      <p class="loading-text">Menyiapkan kenangan...</p>
+      <p class="loading-percent" id="loadingPercent">0%</p>
+      <p class="loading-text" id="loadingStatus">Menyiapkan kenangan...</p>
     </div>
   </div>
 
@@ -41,11 +43,9 @@
   <!-- ═══════════════════════════════ HEADER ═══════════════════════════════ -->
   <header class="site-header">
     <div class="header-inner container">
-
       <div class="header-logo-wrap">
         <img src="images/logo.webp" alt="Logo SMP Integral Hidayatullah" class="header-logo" />
       </div>
-
       <div class="header-text">
         <p class="header-overline">SMP Integral Hidayatullah Timika</p>
         <h1 class="header-title">
@@ -53,7 +53,6 @@
         </h1>
         <p class="header-sub">Kelas 9 Putra &nbsp;·&nbsp; Kenangan yang gak bakal lupa</p>
       </div>
-
     </div>
     <div class="header-rule">
       <span class="rule-line"></span>
@@ -143,7 +142,7 @@
       <p class="section-desc fade-up"></p>
 
       <div class="students-grid" id="studentsGrid">
-        <!-- Populated by script.js -->
+        <!-- Kartu siswa akan dimasukkan oleh script.js -->
       </div>
     </section>
 
