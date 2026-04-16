@@ -558,14 +558,7 @@ a   { text-decoration: none; color: inherit; }
   width: 100%;
   height: auto;
   object-position: top center;
-  transition: transform 0.55s ease, filter 0.3s ease;
-}
-.student-photo.lazy-img:not(.loaded) {
-  filter: blur(8px);
-  background: #1b4a2e;
-}
-.student-photo.loaded {
-  filter: blur(0);
+  transition: transform 0.55s ease;
 }
 .student-card:hover .student-photo { transform: scale(1.05); }
 
@@ -664,65 +657,6 @@ a   { text-decoration: none; color: inherit; }
   text-align: center;
   padding: 1rem 0 0.5rem;
 }
-/* ── Student Card ────────────────────────────────────────── */
-/* ... (kode sebelumnya tetap) ... */
-
-/* Tombol Buka/Tutup Detail */
-.toggle-detail-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: rgba(62, 220, 122, 0.15);
-  border: 1px solid rgba(62, 220, 122, 0.4);
-  border-radius: 40px;
-  padding: 0.5rem 1.2rem;
-  margin-top: 1rem;
-  font-family: var(--font-body);
-  font-weight: 500;
-  font-size: 0.8rem;
-  letter-spacing: 0.05em;
-  color: var(--accent-lt);
-  cursor: pointer;
-  transition: all 0.2s ease;
-  backdrop-filter: blur(4px);
-}
-
-.toggle-detail-btn:hover {
-  background: rgba(62, 220, 122, 0.3);
-  border-color: var(--accent);
-  color: white;
-  transform: translateY(-2px);
-}
-
-.toggle-icon {
-  font-size: 0.7rem;
-  transition: transform 0.2s;
-}
-
-/* Detail content yang bisa di-toggle */
-.student-detail-content {
-  margin-top: 1rem;
-  padding-top: 0.5rem;
-  border-top: 1px dashed rgba(62, 220, 122, 0.3);
-}
-
-/* Perbaikan blur: hanya blur saat loading */
-.student-photo.loading {
-  filter: blur(4px);
-  opacity: 0.8;
-  transition: filter 0.2s, opacity 0.2s;
-}
-
-/* Setelah gambar dimuat, tidak ada blur */
-.student-photo:not(.loading) {
-  filter: blur(0);
-  opacity: 1;
-}
-
-/* Hilangkan efek blur permanen dari kode sebelumnya */
-.student-photo.lazy-img:not(.loaded) {
-  /* tidak diperlukan lagi karena kita pakai class .loading */
-}
 
 /* ── Footer ──────────────────────────────────────────────── */
 .site-footer {
@@ -787,3 +721,66 @@ a   { text-decoration: none; color: inherit; }
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: #0e3a24; }
 ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 8px; }
+/* ── Photo Toggle Button ─────────────────────────────────── */
+.photo-toggle-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  width: 100%;
+  padding: 0.48rem 1rem;
+  background: rgba(14, 58, 36, 0.75);
+  border: none;
+  border-bottom: 1px solid rgba(62, 220, 122, 0.25);
+  color: var(--accent-lt);
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  position: relative;
+  z-index: 4;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+  backdrop-filter: blur(4px);
+}
+.photo-toggle-btn:hover {
+  background: rgba(62, 220, 122, 0.18);
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+.photo-toggle-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+
+.ptb-icon {
+  font-size: 0.6rem;
+  line-height: 1;
+  transition: transform 0.35s ease;
+  display: inline-block;
+}
+
+/* ── Photo Wrap — collapsible ────────────────────────────── */
+.student-photo-wrap {
+  overflow: hidden;
+  transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity    0.45s ease;
+}
+
+/* Saat terbuka — tinggi alami */
+.student-photo-wrap.photo-is-open {
+  max-height: 600px;   /* cukup besar untuk semua foto */
+  opacity: 1;
+}
+
+/* Saat tertutup — collapse + fade */
+.student-photo-wrap.photo-is-closed {
+  max-height: 0 !important;
+  opacity: 0;
+}
+
+/* Ikon panah berputar saat tertutup */
+.student-card:has(.photo-toggle-btn[data-open="false"]) .ptb-icon {
+  transform: rotate(180deg);
+}
