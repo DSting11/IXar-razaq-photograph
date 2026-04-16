@@ -549,25 +549,24 @@ a   { text-decoration: none; color: inherit; }
 }
 .student-card:hover .student-number { transform: scale(1.05); background: #2ecc71; }
 
-/* Default state (tersembunyi) */
 .student-photo-wrap {
+  position: relative;
+  overflow: hidden;
+  background: #1b4a2e;
+  /* Default state tersembunyi akan diatur oleh class photo-is-closed */
   max-height: 0;
   opacity: 0;
-  overflow: hidden;
   transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.45s ease;
 }
-
-/* Terbuka */
 .student-photo-wrap.photo-is-open {
-  max-height: 600px;  /* cukup besar */
+  max-height: 600px;
   opacity: 1;
 }
-
-/* Tertutup (dipaksa oleh class) */
 .student-photo-wrap.photo-is-closed {
   max-height: 0 !important;
   opacity: 0;
 }
+
 .student-photo {
   width: 100%;
   height: auto;
@@ -672,6 +671,46 @@ a   { text-decoration: none; color: inherit; }
   padding: 1rem 0 0.5rem;
 }
 
+/* ── Photo Toggle Button ─────────────────────────────────── */
+.photo-toggle-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  width: 100%;
+  padding: 0.48rem 1rem;
+  background: rgba(14, 58, 36, 0.75);
+  border: none;
+  border-bottom: 1px solid rgba(62, 220, 122, 0.25);
+  color: var(--accent-lt);
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  position: relative;
+  z-index: 4;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+  backdrop-filter: blur(4px);
+}
+.photo-toggle-btn:hover {
+  background: rgba(62, 220, 122, 0.18);
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+.photo-toggle-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+
+.ptb-icon {
+  font-size: 0.6rem;
+  line-height: 1;
+  transition: transform 0.35s ease;
+  display: inline-block;
+}
+
 /* ── Footer ──────────────────────────────────────────────── */
 .site-footer {
   position: relative;
@@ -735,66 +774,131 @@ a   { text-decoration: none; color: inherit; }
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: #0e3a24; }
 ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 8px; }
-/* ── Photo Toggle Button ─────────────────────────────────── */
-.photo-toggle-btn {
+
+/* ═══════════════════════════════════════════════════════════
+   LOADING SCREEN
+   ═══════════════════════════════════════════════════════════ */
+
+.loading-screen {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(145deg, #0e3a24 0%, #1f5e3a 100%);
+  z-index: 9999;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.45rem;
-  width: 100%;
-  padding: 0.48rem 1rem;
-  background: rgba(14, 58, 36, 0.75);
-  border: none;
-  border-bottom: 1px solid rgba(62, 220, 122, 0.25);
-  color: var(--accent-lt);
-  font-family: var(--font-body);
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  cursor: pointer;
-  position: relative;
-  z-index: 4;
-  transition: background 0.2s, color 0.2s, border-color 0.2s;
-  backdrop-filter: blur(4px);
-}
-.photo-toggle-btn:hover {
-  background: rgba(62, 220, 122, 0.18);
-  color: var(--accent);
-  border-bottom-color: var(--accent);
-}
-.photo-toggle-btn:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: -2px;
-}
-
-.ptb-icon {
-  font-size: 0.6rem;
-  line-height: 1;
-  transition: transform 0.35s ease;
-  display: inline-block;
-}
-
-/* ── Photo Wrap — collapsible ────────────────────────────── */
-.student-photo-wrap {
-  overflow: hidden;
-  transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1),
-              opacity    0.45s ease;
-}
-
-/* Saat terbuka — tinggi alami */
-.student-photo-wrap.photo-is-open {
-  max-height: 600px;   /* cukup besar untuk semua foto */
+  transition: opacity 0.6s cubic-bezier(0.23, 1, 0.32, 1), visibility 0.6s;
+  visibility: visible;
   opacity: 1;
+  pointer-events: auto;
 }
 
-/* Saat tertutup — collapse + fade */
-.student-photo-wrap.photo-is-closed {
-  max-height: 0 !important;
+.loading-screen.fade-out {
   opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
 }
 
-/* Ikon panah berputar saat tertutup */
-.student-card:has(.photo-toggle-btn[data-open="false"]) .ptb-icon {
-  transform: rotate(180deg);
+.loading-content {
+  text-align: center;
+  color: white;
+  font-family: var(--font-body);
+  transform: translateY(-5%);
+  animation: floatLoader 3s ease-in-out infinite;
+}
+
+@keyframes floatLoader {
+  0%, 100% { transform: translateY(-5%); }
+  50% { transform: translateY(0%); }
+}
+
+.loading-logo {
+  margin-bottom: 1.5rem;
+}
+
+.loading-logo-img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid var(--accent);
+  box-shadow: 0 0 30px rgba(62, 220, 122, 0.5);
+  animation: pulseLogo 2s infinite alternate;
+}
+
+@keyframes pulseLogo {
+  from { box-shadow: 0 0 15px rgba(62,220,122,0.3); transform: scale(1); }
+  to { box-shadow: 0 0 35px rgba(62,220,122,0.7); transform: scale(1.05); }
+}
+
+.loading-title {
+  font-family: var(--font-display);
+  font-size: 2.8rem;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 0.25rem;
+  letter-spacing: -0.01em;
+}
+
+.loading-title span {
+  color: var(--accent);
+  font-style: italic;
+}
+
+.loading-sub {
+  font-size: 0.85rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent-lt);
+  margin-bottom: 2rem;
+}
+
+.loading-spinner {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  margin: 0 auto 1.5rem;
+}
+
+.spinner-ring {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border: 2px solid transparent;
+  border-top-color: var(--accent);
+  border-right-color: var(--accent-lt);
+  border-radius: 50%;
+  animation: spinRing 1.5s linear infinite;
+}
+
+.spinner-dot {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  background: var(--accent);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 20px var(--accent);
+  animation: pulseDot 1.5s ease-in-out infinite;
+}
+
+@keyframes spinRing {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes pulseDot {
+  0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 1; transform: translate(-50%, -50%) scale(1.8); }
+}
+
+.loading-text {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1rem;
+  color: var(--secondary);
+  letter-spacing: 0.05em;
+  opacity: 0.9;
 }
