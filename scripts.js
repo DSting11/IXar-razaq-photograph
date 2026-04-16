@@ -107,7 +107,7 @@ const FALLBACK_PLACEHOLDER = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org
     hasFinished = true;
     progressBar.style.width = '100%';
     percentText.textContent = '100%';
-    statusText.textContent = 'Selamat datang!';
+    statusText.textContent = 'Loaded';
     setTimeout(() => {
       loader.classList.add('fade-out');
       loader.addEventListener('transitionend', () => {
@@ -211,7 +211,7 @@ function buildStudentCard(s) {
           <p class="text-block-content">${s.pesan}</p>
         </div>
         ${s.lanjut && s.lanjut !== "—" ? `<span class="student-next-school">${s.lanjut}</span>` : ''}
-      ` : `<p class="student-no-data">Kenangan tersimpan dalam hati</p>`}
+      ` : `<p class="student-no-data"></p>`}
     </div>
   `;
 
