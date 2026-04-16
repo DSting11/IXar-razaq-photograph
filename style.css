@@ -664,6 +664,65 @@ a   { text-decoration: none; color: inherit; }
   text-align: center;
   padding: 1rem 0 0.5rem;
 }
+/* ── Student Card ────────────────────────────────────────── */
+/* ... (kode sebelumnya tetap) ... */
+
+/* Tombol Buka/Tutup Detail */
+.toggle-detail-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(62, 220, 122, 0.15);
+  border: 1px solid rgba(62, 220, 122, 0.4);
+  border-radius: 40px;
+  padding: 0.5rem 1.2rem;
+  margin-top: 1rem;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
+  color: var(--accent-lt);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(4px);
+}
+
+.toggle-detail-btn:hover {
+  background: rgba(62, 220, 122, 0.3);
+  border-color: var(--accent);
+  color: white;
+  transform: translateY(-2px);
+}
+
+.toggle-icon {
+  font-size: 0.7rem;
+  transition: transform 0.2s;
+}
+
+/* Detail content yang bisa di-toggle */
+.student-detail-content {
+  margin-top: 1rem;
+  padding-top: 0.5rem;
+  border-top: 1px dashed rgba(62, 220, 122, 0.3);
+}
+
+/* Perbaikan blur: hanya blur saat loading */
+.student-photo.loading {
+  filter: blur(4px);
+  opacity: 0.8;
+  transition: filter 0.2s, opacity 0.2s;
+}
+
+/* Setelah gambar dimuat, tidak ada blur */
+.student-photo:not(.loading) {
+  filter: blur(0);
+  opacity: 1;
+}
+
+/* Hilangkan efek blur permanen dari kode sebelumnya */
+.student-photo.lazy-img:not(.loaded) {
+  /* tidak diperlukan lagi karena kita pakai class .loading */
+}
 
 /* ── Footer ──────────────────────────────────────────────── */
 .site-footer {
